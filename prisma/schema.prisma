@@ -1,0 +1,29 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model carros {
+  id         Int       @id @default(autoincrement())
+  nome       String
+  marca      String
+  modelo     String
+  preco      Float     @db.Real
+  foto       String
+  created_at DateTime? @default(now()) @db.Timestamp(6)
+  updated_at DateTime? @db.Timestamp(6)
+  deleted_at DateTime? @db.Timestamp(6)
+}
+
+model usuario {
+  id         Int       @id @default(autoincrement())
+  login      String
+  senha      String
+  created_at DateTime? @default(now()) @db.Timestamp(6)
+  nome       String?
+  sobrenome  String?
+}
