@@ -7,7 +7,8 @@ import { jwtConstants } from './constants';
 
 @Module({
   controllers: [AuthController],
-  imports: [UsuarioModule,
+  imports: [
+    UsuarioModule,
     JwtModule.register({
       global: true,
       secret: jwtConstants.secret,
@@ -15,6 +16,6 @@ import { jwtConstants } from './constants';
     }),
   ],
   providers: [AuthService],
-  exports: [AuthService]
+  exports: [AuthService],
 })
 export class AuthModule {}
