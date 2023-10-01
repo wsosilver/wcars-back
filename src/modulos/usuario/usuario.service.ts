@@ -12,16 +12,16 @@ export class UsuarioService {
     });
     return usuario;
   }
-  
+
   async create(usuario: CreateUsuarioDto): Promise<any> {
-    await this.prisma.usuario.create({data: {
-      nome: usuario.nome,
-      login: usuario.login,
-      senha: PasswordHelper.create(usuario.senha),
-      sobrenome: usuario.sobrenome
+    await this.prisma.usuario.create({
+      data: {
+        nome: usuario.nome,
+        login: usuario.login,
+        senha: PasswordHelper.create(usuario.senha),
+        sobrenome: usuario.sobrenome,
       },
     });
     return { success: true, message: 'Usuário criado com sucesso.' };
-
   }
 }
