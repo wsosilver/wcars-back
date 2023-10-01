@@ -51,12 +51,12 @@ export class CarrosService {
 
   async update(id: number, updateCarroDto: UpdateCarroDto) {
     await this.prisma.carros.update({
-      where: { id: 1 },
+      where: { id: id },
       data: {
         nome: updateCarroDto.nome,
         marca: updateCarroDto.marca,
         modelo: updateCarroDto.modelo,
-        preco: updateCarroDto.preco,
+        preco: +updateCarroDto.preco,
         foto: updateCarroDto.foto,
         updated_at: new Date(),
       },
@@ -65,8 +65,11 @@ export class CarrosService {
   }
 
   async remove(id: number) {
-    await this.prisma.carros.delete({
+    await this.prisma.carros.update({
       where: { id: id },
+      data: {
+        deleted_at: new Date(),
+      },
     });
     return { success: true, message: 'Registro excluido com sucesso.' };
   }
