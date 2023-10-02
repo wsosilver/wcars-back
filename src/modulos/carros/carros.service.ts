@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateCarroDto } from './dto/create-carro.dto';
 import { UpdateCarroDto } from './dto/update-carro.dto';
 import { PrismaService } from 'src/prisma.service';
-
+import { readFileSync } from 'fs';
 @Injectable()
 export class CarrosService {
   constructor(private prisma: PrismaService) {}
@@ -22,11 +22,20 @@ export class CarrosService {
 
   async findAll(page: number) {
     const carros = await this.prisma.carros.findMany({
-      skip: page ? (page - 1) * 2 : undefined, //apartir de qual indice vai ser devolvido
-      take: page ? 2 : undefined, // quantos indices
+      skip: page ? (page - 1) * 10 : undefined,
+      take: page ? 10 : undefined,
       where: { deleted_at: null },
       orderBy: { preco: 'desc' },
     });
+
+    const carrosFormatados = carros.map((carro) => {
+      const imgBase64 = readFileSync(`src/modulos/carros/imgs/${carro.foto}`, 'base64');
+      return {
+        ...carro,
+        img: imgBase64,
+      };
+    });
+
     const countItens = await this.prisma.carros.count({
       where: { deleted_at: null },
     });
@@ -35,7 +44,7 @@ export class CarrosService {
     const prevPage = page - 1 < 1 ? null : page - 1;
     const message: string = page > lastPage ? 'Pagina inexistente' : '';
     return {
-      data: carros,
+      data: carrosFormatados,
       message: message,
       count: lastPage,
       currentPage: page,
@@ -43,10 +52,6 @@ export class CarrosService {
       prevPage: prevPage,
       lastPage: lastPage,
     };
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} carro`;
   }
 
   async update(id: number, updateCarroDto: UpdateCarroDto) {
