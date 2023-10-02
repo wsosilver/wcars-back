@@ -29,7 +29,10 @@ export class CarrosService {
     });
 
     const carrosFormatados = carros.map((carro) => {
-      const imgBase64 = readFileSync(`src/modulos/carros/imgs/${carro.foto}`, 'base64');
+      const imgBase64 = readFileSync(
+        `src/modulos/carros/imgs/${carro.foto}`,
+        'base64',
+      );
       return {
         ...carro,
         img: imgBase64,
