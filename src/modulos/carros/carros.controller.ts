@@ -3,7 +3,6 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   UseGuards,
@@ -34,7 +33,7 @@ export class CarrosController {
       marca: createCarroDto.marca,
       modelo: createCarroDto.modelo,
       preco: +createCarroDto.preco,
-      foto: file.filename,
+      foto: file != null ? file?.filename : 'null',
     });
   }
 
@@ -43,7 +42,7 @@ export class CarrosController {
     return this.carrosService.findAll(+page);
   }
 
-  @Patch(':id')
+  @Post('/alterar/:id')
   @UseGuards(AuthGuard)
   @UseInterceptors(FileInterceptor('file', multerConfig))
   update(

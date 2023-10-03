@@ -22,17 +22,21 @@ export class CarrosService {
 
   async findAll(page: number) {
     const carros = await this.prisma.carros.findMany({
-      skip: page ? (page - 1) * 10 : undefined,
-      take: page ? 10 : undefined,
+      skip: page ? (page - 1) * 2 : undefined,
+      take: page ? 2 : undefined,
       where: { deleted_at: null },
       orderBy: { preco: 'desc' },
     });
 
     const carrosFormatados = carros.map((carro) => {
-      const imgBase64 = readFileSync(
-        `src/modulos/carros/imgs/${carro.foto}`,
-        'base64',
-      );
+      let imgBase64;
+      if (carro.foto != null) {
+        imgBase64 = readFileSync(
+          `src/modulos/carros/imgs/${carro.foto}`,
+          'base64',
+        );
+      } else imgBase64 = '';
+
       return {
         ...carro,
         img: imgBase64,
